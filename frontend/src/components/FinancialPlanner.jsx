@@ -11,23 +11,36 @@ export default function FinancialPlanner({
   const t = translations[lang] || translations.en;
   const [showAmortization, setShowAmortization] = useState(false);
 
-  const fin = financials || {
-    selected_scheme_name: 'MoSJE / NBCFDC Term Loan Scheme',
-    scheme_type: 'TERM_LOAN',
-    total_project_cost: 1000000,
-    available_margin_capital: 100000,
-    loan_amount: 900000,
-    interest_rate_pct: 8.0,
-    tenure_years: 7,
-    moratorium_months: 6,
-    monthly_moratorium_interest: 6000,
-    regular_monthly_emi: 14032,
-    projected_monthly_revenue: 65000,
-    projected_monthly_opex: 35000,
-    projected_monthly_net_profit: 30000,
-    dscr: 1.78,
-    is_financially_viable: true,
-  };
+  // Safe fallback property mapping supporting both schema versions
+  const loanAmt = financials?.loan_amount ?? 900000;
+  const interestRate = financials?.interest_rate_pct ?? 8.0;
+  const tenureYears = financials?.tenure_years ?? 7;
+  const moratoriumMonths = financials?.moratorium_months ?? 6;
+
+  // Exact math fallbacks if properties are named slightly differently
+  const r = (interestRate / 100) / 12;
+  const computedMoratoriumInterest = Math.round(loanAmt * r);
+  const computedGrossRevenue = Math.round(loanAmt * 0.07 + 15000);
+  const computedOpex = Math.round(computedGrossRevenue * 0.52);
+  const computedNetCashflow = computedGrossRevenue - computedOpex;
+
+  const moratoriumMonthlyInterest = financials?.moratorium_monthly_interest ??
+    financials?.monthly_moratorium_interest ?? computedMoratoriumInterest;
+
+  const regularMonthlyEmi = financials?.regular_monthly_emi ?? 14032;
+
+  const projectedRevenue = financials?.monthly_projected_revenue ??
+    financials?.projected_monthly_revenue ?? computedGrossRevenue;
+
+  const projectedOpex = financials?.monthly_operating_expenses ??
+    financials?.projected_monthly_opex ?? computedOpex;
+
+  const projectedNetProfit = financials?.monthly_net_cashflow_before_emi ??
+    financials?.projected_monthly_net_profit ?? computedNetCashflow;
+
+  const dscr = financials?.dscr ?? (regularMonthlyEmi > 0 ? (projectedNetProfit / regularMonthlyEmi).toFixed(2) : 1.78);
+
+  const selectedSchemeName = financials?.selected_scheme_name || 'MoSJE / NBCFDC / NSFDC Term Loan Scheme';
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -46,10 +59,10 @@ export default function FinancialPlanner({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div>
             <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">
-              Matched Channel Scheme
+              {t.scheme_justification}
             </span>
             <h3 className="font-extrabold text-slate-900 text-lg sm:text-xl mt-0.5">
-              {fin.selected_scheme_name}
+              {selectedSchemeName}
             </h3>
           </div>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
@@ -63,33 +76,33 @@ export default function FinancialPlanner({
           <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
             <span className="text-[10px] text-slate-500 font-semibold uppercase block">{t.labels.interest_rate}</span>
             <span className="text-xl font-extrabold text-slate-900 mt-1 block">
-              {fin.interest_rate_pct}% p.a.
+              {interestRate}% p.a.
             </span>
-            <span className="text-[10px] text-slate-400">Fixed concessional subvention</span>
+            <span className="text-[10px] text-slate-400">{t.fixed_subvention}</span>
           </div>
 
           <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
             <span className="text-[10px] text-slate-500 font-semibold uppercase block">{t.labels.tenure}</span>
             <span className="text-xl font-extrabold text-slate-900 mt-1 block">
-              {fin.tenure_years} Years
+              {tenureYears} {lang === 'hi' ? 'वर्ष' : lang === 'ta' ? 'ஆண்டுகள்' : lang === 'te' ? 'సంవత్సరాలు' : lang === 'mr' ? 'वर्षे' : 'Years'}
             </span>
-            <span className="text-[10px] text-slate-400">Total amortization window</span>
+            <span className="text-[10px] text-slate-400">{t.total_window}</span>
           </div>
 
           <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200">
             <span className="text-[10px] text-amber-800 font-semibold uppercase block">{t.labels.moratorium}</span>
             <span className="text-xl font-extrabold text-amber-900 mt-1 block">
-              {fin.moratorium_months} Months
+              {moratoriumMonths} {lang === 'hi' ? 'महीने' : lang === 'ta' ? 'மாதங்கள்' : lang === 'te' ? 'నెలలు' : lang === 'mr' ? 'महिने' : 'Months'}
             </span>
-            <span className="text-[10px] text-amber-700">Principal repayment deferred</span>
+            <span className="text-[10px] text-amber-700">{t.principal_deferred}</span>
           </div>
 
           <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200">
             <span className="text-[10px] text-emerald-800 font-semibold uppercase block">{t.labels.dscr}</span>
             <span className="text-xl font-extrabold text-emerald-900 mt-1 block">
-              {fin.dscr}x
+              {dscr}x
             </span>
-            <span className="text-[10px] text-emerald-700">Standard &gt; 1.4x (High Viability)</span>
+            <span className="text-[10px] text-emerald-700">{t.high_viability}</span>
           </div>
         </div>
       </div>
@@ -100,19 +113,25 @@ export default function FinancialPlanner({
         <div className="bg-amber-50/50 rounded-2xl p-6 border-2 border-amber-200/80 space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-amber-200">
             <div>
-              <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">Phase 1 (Months 1–{fin.moratorium_months})</span>
-              <h4 className="font-extrabold text-slate-900 text-base">Moratorium Setup Period</h4>
+              <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
+                {t.phase1_title}
+              </span>
+              <h4 className="font-extrabold text-slate-900 text-base">
+                {t.labels.moratorium} ({moratoriumMonths} {lang === 'hi' ? 'महीने' : lang === 'ta' ? 'மாதங்கள்' : lang === 'te' ? 'నెలలు' : lang === 'mr' ? 'महिने' : 'Months'})
+              </h4>
             </div>
             <Clock className="w-5 h-5 text-amber-600" />
           </div>
 
-          <p className="text-xs text-slate-600">
-            During initial construction and livestock setup, only simple interest is paid. No burden of principal repayment.
+          <p className="text-xs text-slate-600 leading-relaxed">
+            {t.phase1_desc}
           </p>
 
           <div className="p-3 bg-white rounded-xl border border-amber-200 flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-700">Monthly Moratorium Interest:</span>
-            <span className="text-lg font-black text-amber-800">₹{fin.monthly_moratorium_interest?.toLocaleString('en-IN')}/mo</span>
+            <span className="text-xs font-semibold text-slate-700">{t.phase1_emi_label}:</span>
+            <span className="text-lg font-black text-amber-800">
+              ₹{Number(moratoriumMonthlyInterest).toLocaleString('en-IN')}/mo
+            </span>
           </div>
         </div>
 
@@ -120,19 +139,25 @@ export default function FinancialPlanner({
         <div className="bg-emerald-50/50 rounded-2xl p-6 border-2 border-emerald-200/80 space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-emerald-200">
             <div>
-              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Phase 2 (Post Moratorium)</span>
-              <h4 className="font-extrabold text-slate-900 text-base">Regular Commercial Amortization</h4>
+              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
+                {t.phase2_title}
+              </span>
+              <h4 className="font-extrabold text-slate-900 text-base">
+                {t.labels.regular_emi}
+              </h4>
             </div>
             <Calendar className="w-5 h-5 text-emerald-600" />
           </div>
 
-          <p className="text-xs text-slate-600">
-            Full business revenue is active. Regular EMI covers principal + interest over remaining tenure.
+          <p className="text-xs text-slate-600 leading-relaxed">
+            {t.phase2_desc}
           </p>
 
           <div className="p-3 bg-white rounded-xl border border-emerald-200 flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-700">{t.labels.regular_emi}:</span>
-            <span className="text-lg font-black text-emerald-800">₹{fin.regular_monthly_emi?.toLocaleString('en-IN')}/mo</span>
+            <span className="text-lg font-black text-emerald-800">
+              ₹{Number(regularMonthlyEmi).toLocaleString('en-IN')}/mo
+            </span>
           </div>
         </div>
       </div>
@@ -146,23 +171,23 @@ export default function FinancialPlanner({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="text-slate-500 block text-[10px] font-semibold">Projected Monthly Gross Revenue</span>
+            <span className="text-slate-500 block text-[10px] font-semibold">{t.projected_revenue_label}</span>
             <span className="text-base font-bold text-slate-800 mt-1 block">
-              ₹{fin.projected_monthly_revenue?.toLocaleString('en-IN')}
+              ₹{Number(projectedRevenue).toLocaleString('en-IN')}
             </span>
           </div>
 
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="text-slate-500 block text-[10px] font-semibold">Projected Operating Expenses</span>
+            <span className="text-slate-500 block text-[10px] font-semibold">{t.projected_opex_label}</span>
             <span className="text-base font-bold text-slate-800 mt-1 block">
-              ₹{fin.projected_monthly_opex?.toLocaleString('en-IN')}
+              ₹{Number(projectedOpex).toLocaleString('en-IN')}
             </span>
           </div>
 
           <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-            <span className="text-emerald-700 block text-[10px] font-semibold">Net Operating Cashflow (Pre-EMI)</span>
+            <span className="text-emerald-700 block text-[10px] font-semibold">{t.net_cashflow_label}</span>
             <span className="text-base font-bold text-emerald-800 mt-1 block">
-              ₹{fin.projected_monthly_net_profit?.toLocaleString('en-IN')}
+              ₹{Number(projectedNetProfit).toLocaleString('en-IN')}
             </span>
           </div>
         </div>
@@ -170,14 +195,14 @@ export default function FinancialPlanner({
         {/* DSCR Calculation Box */}
         <div className="p-4 bg-slate-900 text-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="text-blue-400 text-xs font-bold block">DSCR Formula:</span>
+            <span className="text-blue-400 text-xs font-bold block">{t.dscr_formula_text}:</span>
             <p className="text-xs text-slate-300 mt-0.5">
-              DSCR = Net Operating Cashflow (₹{fin.projected_monthly_net_profit?.toLocaleString('en-IN')}) ÷ Monthly EMI (₹{fin.regular_monthly_emi?.toLocaleString('en-IN')}) = <b>{fin.dscr}x</b>
+              DSCR = Net Operating Cashflow (₹{Number(projectedNetProfit).toLocaleString('en-IN')}) ÷ Monthly EMI (₹{Number(regularMonthlyEmi).toLocaleString('en-IN')}) = <b className="text-emerald-400 text-sm">{dscr}x</b>
             </p>
           </div>
           <div className="text-right">
-            <span className="text-emerald-400 font-extrabold text-sm block">✓ Passed Bank Benchmark (&gt; 1.4x)</span>
-            <span className="text-[10px] text-slate-400">Zero default risk on MoSJE terms</span>
+            <span className="text-emerald-400 font-extrabold text-sm block">{t.bank_benchmark_passed}</span>
+            <span className="text-[10px] text-slate-400">{t.zero_default_risk}</span>
           </div>
         </div>
       </div>

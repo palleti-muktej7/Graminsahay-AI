@@ -15,31 +15,54 @@ export default function DecisionVerdict({
   const t = translations[lang] || translations.en;
   const [downloading, setDownloading] = useState(false);
 
-  const verdict = fullData?.verdict || {
-    verdict: 'GO',
-    viability_score: 92,
-    bankable_readiness_score: 95,
-    summary_verdict: '🟢 HIGHLY RECOMMENDED — Strong Market & Financial Viability',
-    key_success_factors: [
-      'Catchment population (16,000+) provides adequate recurring customer base',
-      'DSCR is 1.78x (exceeds bank benchmark of 1.4x for safety)',
-      '10% beneficiary equity provides ₹9,00,000 MoSJE concessional debt leverage',
-      '6-month moratorium buffers cashflow during enterprise gestation'
+  const localizedFactors = {
+    en: [
+      'Catchment population provides adequate recurring customer base',
+      'DSCR exceeds bank appraisal benchmark of 1.4x for safety',
+      '10% beneficiary equity provides 90% MoSJE concessional debt leverage',
+      'Moratorium buffers cashflow during enterprise gestation period'
     ],
-    recommended_channel_scheme: 'MoSJE / NBCFDC Term Loan Scheme (8.0% p.a., 7-Yr Tenure)',
+    hi: [
+      'स्थानीय गाँव और बाजार क्षेत्र में नियमित ग्राहकों की पर्याप्त संख्या उपलब्ध है।',
+      'ऋण सेवा कवरेज अनुपात (DSCR) बैंक के 1.4x सुरक्षा मानक से अधिक है।',
+      '10% स्वयं की पूंजी पर 90% MoSJE सरकारी रियायती ऋण का पूरा लाभ।',
+      'मोराटोरियम छूट अवधि से शुरुआती महीनों में नकदी प्रवाह सुरक्षित रहता है।'
+    ],
+    ta: [
+      'சுற்றுவட்டார மக்கள் தொகை போதுமான வாடிக்கையாளர் தளத்தை வழங்குகிறது.',
+      'கடன் திருப்பிச் செலுத்தும் திறன் (DSCR) வங்கியின் 1.4x வரம்பை விட அதிகம்.',
+      '10% சொந்த முதலீட்டின் மூலம் 90% அரசு சலுகைக் கடன் வசதி கிடைக்கிறது.',
+      'சலுகைக் காலம் ஆரம்ப மாதங்களில் பணப்புழக்க சுமையை குறைக்கிறது.'
+    ],
+    te: [
+      'గ్రామ పరిధిలోని జనాభా ద్వారా తగినంత స్థిరమైన కస్టమర్ల డిమాండ్ లభిస్తుంది.',
+      'రుణ చెల్లింపు సామర్థ్యం (DSCR) బ్యాంక్ ప్రామాణిక 1.4x కంటే ఎక్కువగా ఉంది.',
+      '10% స్వంత వాటాతో 90% ప్రభుత్వ MoSJE సబ్సిడీ రుణాన్ని పొందవచ్చు.',
+      'మొరటోరియం గడువు ప్రారంభ నెలల్లో వ్యాపార నగదు ప్రవాహానికి రక్షణ కల్పిస్తుంది.'
+    ],
+    mr: [
+      'परिसरातील लोकसंख्येमुळे नियमित ग्राहकांची पुरेशी मागणी उपलब्ध आहे.',
+      'कर्ज परतफेड क्षमता (DSCR) बँकेच्या 1.4x सुरक्षा मानकापेक्षा जास्त आहे.',
+      '10% स्वतःच्या भांडवलावर 90% MoSJE शासकीय सवलतीच्या कर्जाचा लाभ.',
+      'मोरेटोरियम सवलतीमुळे सुरुवातीच्या काळात रोख रकमेचे नियोजन सुरक्षित राहते.'
+    ]
   };
 
+  const rawVerdict = fullData?.verdict;
+  const verdictVerdict = rawVerdict?.verdict || 'GO';
+  const viabilityScore = rawVerdict?.viability_score || 92;
+  const readinessScore = rawVerdict?.bankable_readiness_score || 95;
+
+  const currentFactors = localizedFactors[lang] || localizedFactors.en;
+
   const applicant = fullData?.entrepreneur?.full_name || 'Ramesh Kumar';
-  const bizName = fullData?.business_name || 'Dairy Farming & Milk Processing';
+  const bizName = fullData?.business_name || (t.biz_dairy || 'Dairy Farming & Milk Processing');
   const location = fullData?.location || { village: 'Melattur', district: 'Thanjavur', state: 'Tamil Nadu' };
-  const financials = fullData?.financials || {
-    available_margin_capital: 100000,
-    total_project_cost: 1000000,
-    loan_amount: 900000,
-    interest_rate_pct: 8.0,
-    regular_monthly_emi: 14032,
-    dscr: 1.78
-  };
+  
+  const fin = fullData?.financials;
+  const totalCost = fin?.total_project_cost ?? 1000000;
+  const loanAmt = fin?.loan_amount ?? 900000;
+  const emi = fin?.regular_monthly_emi ?? 14032;
 
   const handleDownloadDPR = async () => {
     setDownloading(true);
@@ -57,7 +80,7 @@ export default function DecisionVerdict({
   };
 
   const getVerdictStyle = () => {
-    switch (verdict.verdict) {
+    switch (verdictVerdict) {
       case 'GO':
         return {
           bg: 'bg-emerald-50 border-emerald-300 text-emerald-950',
@@ -123,7 +146,7 @@ export default function DecisionVerdict({
             </div>
             <div>
               <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider mb-1 ${vStyle.badge}`}>
-                {verdict.verdict} VERDICT
+                {verdictVerdict} VERDICT
               </span>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900">
                 {vStyle.title}
@@ -134,11 +157,11 @@ export default function DecisionVerdict({
           <div className="flex items-center gap-4">
             <div className="text-right">
               <span className="text-[10px] uppercase font-bold text-slate-500 block">{t.labels.verdict_score}</span>
-              <span className="text-3xl font-black text-slate-900">{verdict.viability_score}/100</span>
+              <span className="text-3xl font-black text-slate-900">{viabilityScore}/100</span>
             </div>
             <div className="text-right">
               <span className="text-[10px] uppercase font-bold text-slate-500 block">Bankable Readiness</span>
-              <span className="text-3xl font-black text-emerald-700">{verdict.bankable_readiness_score}%</span>
+              <span className="text-3xl font-black text-emerald-700">{readinessScore}%</span>
             </div>
           </div>
         </div>
@@ -155,11 +178,11 @@ export default function DecisionVerdict({
           </div>
           <div>
             <span className="text-slate-400 block text-[10px] font-semibold">{t.labels.total_project_cost}:</span>
-            <span className="font-bold text-slate-800">₹{financials.total_project_cost?.toLocaleString('en-IN')}</span>
+            <span className="font-bold text-slate-900">₹{Number(totalCost).toLocaleString('en-IN')}</span>
           </div>
           <div>
             <span className="text-slate-400 block text-[10px] font-semibold">{t.labels.loan_amount}:</span>
-            <span className="font-extrabold text-blue-700">₹{financials.loan_amount?.toLocaleString('en-IN')} (90%)</span>
+            <span className="font-extrabold text-blue-700">₹{Number(loanAmt).toLocaleString('en-IN')} (90%)</span>
           </div>
         </div>
 
@@ -167,10 +190,10 @@ export default function DecisionVerdict({
         <div className="space-y-3">
           <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            Key Success Factors & Bank Appraisal Highlights:
+            {t.key_factors_title}
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {verdict.key_success_factors?.map((factor, idx) => (
+            {currentFactors.map((factor, idx) => (
               <div key={idx} className="p-3 bg-white rounded-xl border border-slate-200 text-xs text-slate-800 flex items-start gap-2">
                 <span className="text-emerald-600 font-bold mt-0.5">✓</span>
                 <span className="font-medium leading-relaxed">{factor}</span>
