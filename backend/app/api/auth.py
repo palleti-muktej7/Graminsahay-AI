@@ -5,7 +5,7 @@ import datetime
 import uuid
 from ..core.supabase_client import (
     create_user_profile, get_user_by_credentials, fetch_all_proposals_from_supabase,
-    update_proposal_status_in_supabase
+    update_proposal_status_in_supabase, test_database_connection
 )
 
 auth_router = APIRouter()
@@ -27,6 +27,13 @@ class UpdateStatusRequest(BaseModel):
     proposal_id: str
     status: str
     remarks: Optional[str] = None
+
+@auth_router.get("/db-health")
+def check_db_health():
+    """
+    Diagnostic endpoint to verify Supabase PostgreSQL connection status on Vercel or localhost.
+    """
+    return test_database_connection()
 
 @auth_router.post("/register")
 def register_user(req: UserRegister):

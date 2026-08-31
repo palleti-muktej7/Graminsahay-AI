@@ -14,7 +14,7 @@ DB_PASS = os.getenv("DB_PASS", "B!Y+QEa87AD^if^")
 def get_db_connection():
     """
     Establishes an SSL-encrypted PostgreSQL connection to Supabase.
-    Works seamlessly on Localhost, Vercel Serverless, AWS, and Mobile.
+    Supports DATABASE_URL, connection poolers, and direct hosts.
     """
     if DATABASE_URL:
         url = DATABASE_URL
@@ -31,6 +31,43 @@ def get_db_connection():
         sslmode="require",
         connect_timeout=10
     )
+
+def test_database_connection() -> Dict[str, Any]:
+    """
+    Diagnostic function to test Supabase connection and return status.
+    """
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT current_database(), current_user, version();")
+        info = cur.fetchone()
+        
+        cur.execute("SELECT count(*) FROM public.business_proposals;")
+        proposals_count = cur.fetchone()[0]
+        
+        cur.execute("SELECT count(*) FROM public.profiles;")
+        profiles_count = cur.fetchone()[0]
+        
+        cur.close()
+        conn.close()
+        
+        return {
+            "status": "connected",
+            "database": info[0],
+            "user": info[1],
+            "host": DB_HOST if not DATABASE_URL else "DATABASE_URL configured",
+            "proposals_in_db": proposals_count,
+            "profiles_in_db": profiles_count,
+            "message": "Supabase PostgreSQL connected successfully with SSL!"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "host_attempted": DB_HOST,
+            "error_type": type(e).__name__,
+            "error_detail": str(e),
+            "suggestion": "If running on Vercel without IPv6, use Supabase Connection Pooler or verify DB credentials."
+        }
 
 def create_user_profile(user_data: Dict[str, Any]) -> Dict[str, Any]:
     """
