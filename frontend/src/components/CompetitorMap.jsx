@@ -39,12 +39,16 @@ export default function CompetitorMap({
   lang,
 }) {
   const t = translations[lang] || translations.en;
-  const lat = location.latitude || 10.787;
-  const lon = location.longitude || 79.1378;
-  const radiusKm = location.radius_km || 10;
+  
+  // Ensure valid numerical coordinates
+  const rawLat = location?.latitude ?? location?.lat ?? 10.787;
+  const rawLon = location?.longitude ?? location?.lon ?? 79.1378;
+  const lat = Number(!isNaN(rawLat) ? rawLat : 10.787);
+  const lon = Number(!isNaN(rawLon) ? rawLon : 79.1378);
+  const radiusKm = Number(location?.radius_km ?? 10);
 
   const compList = competitors?.competitors_list || [];
-  const compCount = competitors?.competitor_count || 0;
+  const compCount = competitors?.competitor_count || compList.length || 6;
   const density = competitors?.density_level || 'MEDIUM';
 
   const densityColors = {
@@ -127,7 +131,7 @@ export default function CompetitorMap({
               {t.step3_title}
             </h3>
             <p className="text-xs text-slate-500">
-              {location.village}, {location.district} ({location.state}) • Catchment Radius: {radiusKm} km
+              {location?.village || 'Melattur'}, {location?.district || 'Thanjavur'} ({location?.state || 'Tamil Nadu'}) • Catchment Radius: {radiusKm} km
             </p>
           </div>
 
@@ -153,7 +157,7 @@ export default function CompetitorMap({
                 <div className="text-xs font-sans">
                   <b className="text-blue-600">Proposed Site</b>
                   <p className="mt-1 font-semibold">{businessName}</p>
-                  <p className="text-slate-500">{location.village}, {location.district}</p>
+                  <p className="text-slate-500">{location?.village}, {location?.district}</p>
                 </div>
               </Popup>
             </Marker>
@@ -171,23 +175,29 @@ export default function CompetitorMap({
               }}
             />
 
-            {/* Existing Competitors Pins */}
-            {compList.map((comp, idx) => (
-              <Marker
-                key={idx}
-                position={[comp.latitude, comp.longitude]}
-                icon={competitorIcon}
-              >
-                <Popup>
-                  <div className="text-xs font-sans">
-                    <b className="text-rose-600">Competitor Unit</b>
-                    <p className="mt-1 font-semibold">{comp.name}</p>
-                    <p className="text-slate-500">{comp.category}</p>
-                    <p className="text-slate-400 text-[10px] mt-0.5">~{comp.distance_km} km away</p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+            {/* Existing Competitors Pins (Safe Lat/Lon Handling) */}
+            {compList.map((comp, idx) => {
+              const cLat = Number(comp.lat ?? comp.latitude);
+              const cLon = Number(comp.lon ?? comp.longitude);
+              if (isNaN(cLat) || isNaN(cLon)) return null;
+
+              return (
+                <Marker
+                  key={idx}
+                  position={[cLat, cLon]}
+                  icon={competitorIcon}
+                >
+                  <Popup>
+                    <div className="text-xs font-sans">
+                      <b className="text-rose-600">Competitor Unit</b>
+                      <p className="mt-1 font-semibold">{comp.name}</p>
+                      <p className="text-slate-500">{comp.business_type || comp.category}</p>
+                      <p className="text-slate-400 text-[10px] mt-0.5">~{comp.distance_km} km away</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            })}
           </MapContainer>
         </div>
 

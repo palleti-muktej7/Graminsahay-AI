@@ -37,30 +37,29 @@ def get_district_profile(district_name: str) -> Dict[str, Any]:
 def fetch_osm_competitors(lat: float, lon: float, radius_km: float, osm_tags: List[str]) -> List[Dict[str, Any]]:
     """
     Attempts to fetch live POIs from OpenStreetMap Overpass API within radius_km.
+    Times out in 2.0s to ensure instantaneous UI transitions.
     """
     radius_meters = int(radius_km * 1000)
-    # Build union query of tags
     tag_filters = []
     for tag in osm_tags:
         if "=" in tag:
             k, v = tag.split("=")
             tag_filters.append(f'node["{k}"="{v}"](around:{radius_meters},{lat},{lon});')
-            tag_filters.append(f'way["{k}"="{v}"](around:{radius_meters},{lat},{lon});')
         else:
             tag_filters.append(f'node["{tag}"](around:{radius_meters},{lat},{lon});')
 
     query_body = "\n".join(tag_filters)
     overpass_ql = f"""
-    [out:json][timeout:8];
+    [out:json][timeout:3];
     (
       {query_body}
     );
-    out center 25;
+    out center 15;
     """
 
     url = "https://overpass-api.de/api/interpreter"
     try:
-        with httpx.Client(timeout=6.0) as client:
+        with httpx.Client(timeout=2.0) as client:
             resp = client.post(url, data={"data": overpass_ql})
             if resp.status_code == 200:
                 data = resp.json()
@@ -99,7 +98,6 @@ def generate_district_anchored_competitors(
     sample_prefixes = ["Sri ", "Om ", "Annapoorna ", "Rural ", "Kisan ", "Village ", "Jai Hind ", "Ganga "]
     items = []
     for i in range(count):
-        # random angle and distance within radius
         angle = random.uniform(0, 2 * math.pi)
         dist = round(random.uniform(0.8, radius_km * 0.85), 2)
         d_lat = (dist / 111.0) * math.cos(angle)
@@ -140,18 +138,18 @@ def analyze_geo_market(location: LocationInput, business_id: str) -> Tuple[Marke
         explanation = f"Found {competitor_count} verified commercial POIs within {radius}km radius."
     else:
         # Synthesize fallback district baseline
-        proxy_count = random.randint(4, 9)
+        proxy_count = random.randint(4, 8)
         combined = osm_competitors + generate_district_anchored_competitors(lat, lon, radius, b_name, count=proxy_count)
-        competitor_list = combined[:12]
+        competitor_list = combined[:10]
         competitor_count = len(competitor_list)
         confidence = "MEDIUM" if len(osm_competitors) > 0 else "MEDIUM-LOW"
         source = "Hybrid: OSM + District Panchayat / Udyam Baseline Density"
-        explanation = f"Estimated ~{competitor_count} existing units in {radius}km catchment. (Rural micro-POIs in OSM supplemented by district statistical averages)."
+        explanation = f"Estimated ~{competitor_count} existing units in {radius}km catchment."
 
     # Determine density level
     if competitor_count <= 4:
         density_level = "LOW"
-    elif competitor_count <= 9:
+    elif competitor_count <= 8:
         density_level = "MEDIUM"
     else:
         density_level = "HIGH"
@@ -179,15 +177,13 @@ def analyze_geo_market(location: LocationInput, business_id: str) -> Tuple[Marke
 
     # 2. Market Reach & Population Catchment
     base_pop = dist_profile.get("avg_village_population", 4500)
-    # Scale population by catchment radius area relative to 5km base
     area_factor = (radius / 5.0) ** 1.6
     estimated_pop = int(base_pop * area_factor)
     hh_size = dist_profile.get("avg_household_size", 4.5)
     estimated_hh = int(estimated_pop / hh_size)
 
-    # Target customer conversion proxy by business type
     conversion_rates = {
-        "dairy_farming": 0.65,  # 65% of households consume milk daily
+        "dairy_farming": 0.65,
         "poultry_farming": 0.45,
         "rural_kirana_retail": 0.80,
         "tailoring_garments": 0.35,
