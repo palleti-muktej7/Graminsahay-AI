@@ -1,0 +1,78 @@
+{
+  "default_proxy": {
+    "avg_village_population": 4200,
+    "avg_household_size": 4.6,
+    "rural_purchasing_power_tier": "Medium",
+    "avg_monthly_discretionary_spend_inr": 3800,
+    "primary_channels": ["Weekly Village Haat", "Local Tea Stalls & Eateries", "Door-to-door Households", "Block Main Market"],
+    "confidence": "MEDIUM",
+    "source": "Census 2011 Rural Aggregates & MoSPI NSSO Proxy"
+  },
+  "districts": {
+    "thanjavur": {
+      "state": "Tamil Nadu",
+      "district": "Thanjavur",
+      "lat": 10.7870,
+      "lon": 79.1378,
+      "avg_village_population": 5400,
+      "avg_household_size": 4.1,
+      "rural_purchasing_power_tier": "Medium-High",
+      "avg_monthly_discretionary_spend_inr": 4800,
+      "top_local_demand": ["Dairy & Sweet Base", "Paddy Straw Feed", "Handloom Silk & Tailoring", "Agri implements"],
+      "confidence": "HIGH",
+      "source": "Tamil Nadu Agro-Economic Census & District Statistical Handbook"
+    },
+    "barabanki": {
+      "state": "Uttar Pradesh",
+      "district": "Barabanki",
+      "lat": 26.9274,
+      "lon": 81.1834,
+      "avg_village_population": 4800,
+      "avg_household_size": 5.2,
+      "rural_purchasing_power_tier": "Medium",
+      "avg_monthly_discretionary_spend_inr": 3400,
+      "top_local_demand": ["Mentha / Essential Oil", "Dairy Farming", "Handloom Weaving", "Spice processing"],
+      "confidence": "HIGH",
+      "source": "UP District Statistical Profile & MoSJE Baseline"
+    },
+    "pune": {
+      "state": "Maharashtra",
+      "district": "Pune Rural",
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "avg_village_population": 6200,
+      "avg_household_size": 4.4,
+      "rural_purchasing_power_tier": "High",
+      "avg_monthly_discretionary_spend_inr": 5800,
+      "top_local_demand": ["Milk chilling & Paneer", "Auto/Tractor Workshop", "Vegetable Sorting", "Poultry"],
+      "confidence": "HIGH",
+      "source": "Maharashtra Economic Survey & SLBC Report"
+    },
+    "guntur": {
+      "state": "Andhra Pradesh",
+      "district": "Guntur",
+      "lat": 16.3067,
+      "lon": 80.4365,
+      "avg_village_population": 5100,
+      "avg_household_size": 4.0,
+      "rural_purchasing_power_tier": "Medium-High",
+      "avg_monthly_discretionary_spend_inr": 4600,
+      "top_local_demand": ["Chilli & Spice Grinding", "Dairy", "Cotton Tailoring", "Aqua-feed/Poultry"],
+      "confidence": "HIGH",
+      "source": "AP State Socio-Economic Survey"
+    },
+    "patna": {
+      "state": "Bihar",
+      "district": "Patna Rural",
+      "lat": 25.5941,
+      "lon": 85.1376,
+      "avg_village_population": 5800,
+      "avg_household_size": 5.8,
+      "rural_purchasing_power_tier": "Medium",
+      "avg_monthly_discretionary_spend_inr": 3200,
+      "top_local_demand": ["Dairy Products", "Kirana Stores", "Small Flour Mills", "Garment Stitching"],
+      "confidence": "HIGH",
+      "source": "Bihar Rural Livelihood Mission (JEEViKA)"
+    }
+  }
+}

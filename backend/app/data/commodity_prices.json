@@ -1,0 +1,75 @@
+{
+  "dairy_farming": {
+    "product": "Cow/Buffalo Raw Milk (1 Litre)",
+    "benchmark_price_inr": 54.0,
+    "min_price_inr": 48.0,
+    "max_price_inr": 62.0,
+    "value_add_benchmark": {
+      "Paneer (1 kg)": 360.0,
+      "Desi Ghee (1 Litre)": 750.0,
+      "Curd/Dahi (1 kg)": 80.0
+    },
+    "data_source": "Agmarknet Dairy Cell & State Milk Federation Procurements",
+    "recommended_pricing_strategy": "Cost-Plus with Premium for Freshness (Target ₹52-55/L for doorstep delivery to outprice urban packaged milk)"
+  },
+  "poultry_farming": {
+    "product": "Live Broiler Chicken (1 kg)",
+    "benchmark_price_inr": 145.0,
+    "min_price_inr": 125.0,
+    "max_price_inr": 170.0,
+    "value_add_benchmark": {
+      "Desi Country Eggs (Tray of 30)": 240.0,
+      "Dressed Fresh Meat (1 kg)": 220.0
+    },
+    "data_source": "National Egg Coordination Committee (NECC) & State Poultry Rates",
+    "recommended_pricing_strategy": "Direct Farm Gate Discount (Offer 5% below town retail stalls to capture local village demand)"
+  },
+  "rural_kirana_retail": {
+    "product": "Average Grocery Basket Mark-Up",
+    "benchmark_price_inr": 12.0,
+    "min_price_inr": 8.0,
+    "max_price_inr": 18.0,
+    "value_add_benchmark": {
+      "AePS / Micro-ATM commission per transaction": 15.0,
+      "Bulk grain packaging margin": 15.0
+    },
+    "data_source": "Retailers Association of India (RAI) Rural Grocery Benchmarks",
+    "recommended_pricing_strategy": "Everyday Fair Price with bundled micro-banking service convenience"
+  },
+  "tailoring_garments": {
+    "product": "Standard Blouse / Kurta Stitching",
+    "benchmark_price_inr": 350.0,
+    "min_price_inr": 200.0,
+    "max_price_inr": 650.0,
+    "value_add_benchmark": {
+      "Bridal / Aari Work Blouse": 1500.0,
+      "School Uniform Pair Stitching": 450.0
+    },
+    "data_source": "State Handloom & Handicrafts Board Sample Survey",
+    "recommended_pricing_strategy": "Tiered Pricing (Base simple stitch at market rate + Premium add-on for express 24h delivery)"
+  },
+  "agro_processing_mill": {
+    "product": "Flour/Spice Grinding Service (per kg)",
+    "benchmark_price_inr": 8.0,
+    "min_price_inr": 5.0,
+    "max_price_inr": 12.0,
+    "value_add_benchmark": {
+      "Packaged Pure Turmeric Powder (250g)": 75.0,
+      "Cold Pressed Mustard Oil (1 Litre)": 185.0
+    },
+    "data_source": "Ministry of Food Processing Industries (MoFPI) Rural Cluster Unit",
+    "recommended_pricing_strategy": "Volume-discounted milling + High-margin proprietary spice brand"
+  },
+  "two_wheeler_workshop": {
+    "product": "General Two-Wheeler Servicing & Oil Change",
+    "benchmark_price_inr": 350.0,
+    "min_price_inr": 250.0,
+    "max_price_inr": 600.0,
+    "value_add_benchmark": {
+      "Tubeless tyre puncture repair": 80.0,
+      "Tractor oil-filter change": 450.0
+    },
+    "data_source": "Automotive Skills Development Council (ASDC) Micro-Garage Survey",
+    "recommended_pricing_strategy": "Standard diagnostic rate + 20% margin on genuine spares"
+  }
+}

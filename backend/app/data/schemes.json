@@ -1,0 +1,84 @@
+[
+  {
+    "id": "mosje_micro_finance",
+    "name": "MoSJE / NBCFDC Micro Finance Scheme",
+    "nodal_agency": "Ministry of Social Justice & Empowerment / NBCFDC",
+    "min_cost": 10000,
+    "max_cost": 140000,
+    "max_financing_pct": 90.0,
+    "beneficiary_contribution_pct": 10.0,
+    "interest_rate_pct": 6.5,
+    "tenure_years": 3,
+    "tenure_months": 36,
+    "moratorium_months": 3,
+    "target_beneficiaries": "Rural micro-entrepreneurs, backward classes, marginalized artisans & farmers",
+    "description": "Concessional small-ticket credit window for village micro-enterprises with simplified documentation and 3-month grace moratorium.",
+    "key_benefits": [
+      "Low concessional interest rate of 6.5% p.a.",
+      "Requires only 10% own equity margin",
+      "3-month moratorium on principal repayment to stabilize cash flow",
+      "Fast-track processing through State Channelizing Agencies (SCAs)"
+    ]
+  },
+  {
+    "id": "mosje_term_loan",
+    "name": "MoSJE / NBCFDC / NSFDC Term Loan Scheme",
+    "nodal_agency": "Ministry of Social Justice & Empowerment / NSFDC / NBCFDC",
+    "min_cost": 140001,
+    "max_cost": 5000000,
+    "max_financing_pct": 90.0,
+    "beneficiary_contribution_pct": 10.0,
+    "interest_rate_pct": 8.0,
+    "tenure_years": 7,
+    "tenure_months": 84,
+    "moratorium_months": 6,
+    "target_beneficiaries": "Rural & semi-urban micro/small enterprises needing machinery & equipment",
+    "description": "Medium-to-large capital asset creation loan for rural agro-processing, dairy units, workshop machinery, and retail infrastructure.",
+    "key_benefits": [
+      "Concessional interest rate of 8.0% p.a. for up to ₹50 Lakhs project cost",
+      "Extended 7-year repayment window with 6-month initial moratorium",
+      "Up to 90% loan component covering capital assets and working capital margin",
+      "Direct bank linkage with MoSJE interest subsidy alignment"
+    ]
+  },
+  {
+    "id": "pmegp_rural_subsidy",
+    "name": "PMEGP (Prime Minister Employment Generation Programme)",
+    "nodal_agency": "KVIC / MoMSME",
+    "min_cost": 50000,
+    "max_cost": 5000000,
+    "max_financing_pct": 95.0,
+    "beneficiary_contribution_pct": 5.0,
+    "interest_rate_pct": 9.5,
+    "tenure_years": 5,
+    "tenure_months": 60,
+    "moratorium_months": 6,
+    "target_beneficiaries": "Rural youth, women, SC/ST, OBC, and minority entrepreneurs",
+    "description": "Credit-linked subsidy program offering 25% to 35% margin money government subsidy for rural micro-enterprises.",
+    "key_benefits": [
+      "Up to 35% government subsidy in rural areas for special categories",
+      "Only 5% to 10% own equity required",
+      "Bank term loan for remaining capital requirements"
+    ]
+  },
+  {
+    "id": "mudra_kishore",
+    "name": "Pradhan Mantri MUDRA Yojana (Kishore Category)",
+    "nodal_agency": "MUDRA / Department of Financial Services",
+    "min_cost": 50000,
+    "max_cost": 500000,
+    "max_financing_pct": 85.0,
+    "beneficiary_contribution_pct": 15.0,
+    "interest_rate_pct": 9.0,
+    "tenure_years": 5,
+    "tenure_months": 60,
+    "moratorium_months": 3,
+    "target_beneficiaries": "Established small businesses expanding operations",
+    "description": "Collateral-free business credit for service units, shopkeepers, and micro-manufacturers.",
+    "key_benefits": [
+      "No collateral or third-party guarantee required",
+      "MUDRA debit card provided for working capital drawdown",
+      "Flexible repayment up to 5 years"
+    ]
+  }
+]

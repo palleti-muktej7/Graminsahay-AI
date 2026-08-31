@@ -1,0 +1,148 @@
+[
+  {
+    "id": "dairy_farming",
+    "name": "Dairy Farming & Milk Processing",
+    "category": "Agriculture & Animal Husbandry",
+    "osm_tags": ["shop=dairy", "amenity=marketplace", "shop=convenience", "industrial=dairy"],
+    "min_suggested_capital": 50000,
+    "typical_margin_pct": 22.0,
+    "capital_asset_split": 0.70,
+    "working_capital_split": 0.30,
+    "raw_materials": ["Cattle feed (green & dry fodder)", "Veterinary medicines", "Milk cans", "Milking / chilling kit"],
+    "common_threats": [
+      "Feed price volatility during dry summer seasons",
+      "Perishability risk in absence of bulk milk coolers (BMCs)",
+      "Bovine disease risks and seasonal breeding cycles",
+      "Monopsony dependence on single private middlemen"
+    ],
+    "value_add_opportunities": [
+      "Paneer and Ghee production (35-45% higher gross margin than liquid milk)",
+      "Direct B2B supply agreements with local sweet shops and tea stalls",
+      "Probiotic Curd and Flavoured Milk packaging in 200ml pouches",
+      "Organic cow dung vermicompost packaging for local nurseries"
+    ],
+    "benchmark_unit_metric": "Litres/day",
+    "typical_unit_cost_range": [38, 44],
+    "typical_unit_selling_price_range": [50, 62]
+  },
+  {
+    "id": "poultry_farming",
+    "name": "Broiler & Layer Poultry Farm",
+    "category": "Animal Husbandry & Food",
+    "osm_tags": ["shop=butcher", "shop=poultry", "amenity=marketplace"],
+    "min_suggested_capital": 60000,
+    "typical_margin_pct": 24.0,
+    "capital_asset_split": 0.65,
+    "working_capital_split": 0.35,
+    "raw_materials": ["Day-old chicks (DOC)", "Soy/Maize feed concentrate", "Vaccines & sanitizers", "Litter material"],
+    "common_threats": [
+      "Bird flu/disease breakout rumors impacting consumer demand",
+      "Mortality during extreme heatwaves without insulation",
+      "High fluctuation in wholesale chicken meat rates"
+    ],
+    "value_add_opportunities": [
+      "Direct live-bird dressing unit eliminating mandi brokers",
+      "Farm-fresh country egg retail counter in 6-pack eco-boxes",
+      "Poultry manure packaging for local horticulture farmers"
+    ],
+    "benchmark_unit_metric": "kg / bird",
+    "typical_unit_cost_range": [85, 105],
+    "typical_unit_selling_price_range": [130, 165]
+  },
+  {
+    "id": "rural_kirana_retail",
+    "name": "Rural Kirana & General Store",
+    "category": "Retail & Commerce",
+    "osm_tags": ["shop=convenience", "shop=general", "shop=supermarket", "shop=kiosk"],
+    "min_suggested_capital": 30000,
+    "typical_margin_pct": 14.0,
+    "capital_asset_split": 0.40,
+    "working_capital_split": 0.60,
+    "raw_materials": ["FMCG inventory", "Packaged grains & pulses", "Edible oils", "Toiletries & stationery"],
+    "common_threats": [
+      "Capital lock-in due to informal village credit (udhaar)",
+      "Price competition from wholesale town traders",
+      "Perishable stock spoilage in humid weather"
+    ],
+    "value_add_opportunities": [
+      "Micro-ATM & AePS cash withdrawal point (generates steady footfall)",
+      "Daily fresh vegetable & local farm egg corner",
+      "WhatsApp ordering with free doorstep village delivery"
+    ],
+    "benchmark_unit_metric": "Daily Sales Turnover",
+    "typical_unit_cost_range": [3000, 8000],
+    "typical_unit_selling_price_range": [3500, 9500]
+  },
+  {
+    "id": "tailoring_garments",
+    "name": "Tailoring, Boutique & Readymade Garments",
+    "category": "Textiles & Handloom",
+    "osm_tags": ["shop=tailor", "shop=clothes", "shop=fabric", "craft=tailor"],
+    "min_suggested_capital": 20000,
+    "typical_margin_pct": 45.0,
+    "capital_asset_split": 0.55,
+    "working_capital_split": 0.45,
+    "raw_materials": ["Sewing machines (standard & overlock)", "Fabrics & linings", "Threads, buttons, zippers, laces"],
+    "common_threats": [
+      "Highly seasonal demand concentrated around festivals and wedding months",
+      "Competition from low-cost mass-produced synthetic readymades from urban hubs",
+      "Frequent power outages disrupting motorized machines without inverter"
+    ],
+    "value_add_opportunities": [
+      "School uniform contracts for local government & private schools",
+      "Custom blouse embroidery & designer bridal wear",
+      "Fabric-cut piece retailing alongside custom stitching"
+    ],
+    "benchmark_unit_metric": "Stitched garment unit",
+    "typical_unit_cost_range": [80, 150],
+    "typical_unit_selling_price_range": [250, 650]
+  },
+  {
+    "id": "agro_processing_mill",
+    "name": "Mini Flour Mill & Spice Grinding Unit",
+    "category": "Agro-Processing & FoodTech",
+    "osm_tags": ["craft=mill", "industrial=flour_mill", "shop=spices", "shop=food"],
+    "min_suggested_capital": 45000,
+    "typical_margin_pct": 32.0,
+    "capital_asset_split": 0.75,
+    "working_capital_split": 0.25,
+    "raw_materials": ["3-phase commercial motor pulverizer", "Wheat, gram, turmeric, coriander seeds", "Food-grade packaging pouches"],
+    "common_threats": [
+      "Unstable three-phase rural electricity supply",
+      "Seasonal crop harvest cycle dictating raw spice prices",
+      "FSSAI food hygiene compliance requirements"
+    ],
+    "value_add_opportunities": [
+      "Cold-pressed virgin mustard/groundnut oil extraction attachment",
+      "Pure organic turmeric and chilli powder brand for nearby weekly haats",
+      "Job-work grinding charges for local village farmers"
+    ],
+    "benchmark_unit_metric": "kg processed",
+    "typical_unit_cost_range": [6, 12],
+    "typical_unit_selling_price_range": [18, 35]
+  },
+  {
+    "id": "two_wheeler_workshop",
+    "name": "Two-Wheeler & Agri-Machinery Repair Workshop",
+    "category": "Automotive & Technical Services",
+    "osm_tags": ["shop=motorcycle_repair", "shop=car_repair", "craft=welder", "shop=tyres"],
+    "min_suggested_capital": 35000,
+    "typical_margin_pct": 40.0,
+    "capital_asset_split": 0.60,
+    "working_capital_split": 0.40,
+    "raw_materials": ["Air compressor, hydraulic jack, toolkits", "Engine oils & lubricants", "Fast-moving spare parts & tubes"],
+    "common_threats": [
+      "Credit recovery delays from local tractor/bike owners",
+      "Technological changes (EV bikes requiring electronics diagnostics)",
+      "Uncertified counterfeit spare parts leading to customer dissatisfaction"
+    ],
+    "value_add_opportunities": [
+      "Solar water pump & diesel generator servicing contract",
+      "Tubeless tyre puncture repair and nitrogen inflation kiosk",
+      "Mobile breakdown repair service across a 15km village radius"
+    ],
+    "benchmark_unit_metric": "Service Job / Day",
+    "typical_unit_cost_range": [150, 400],
+    "typical_unit_selling_price_range": [350, 900]
+  }
+]
