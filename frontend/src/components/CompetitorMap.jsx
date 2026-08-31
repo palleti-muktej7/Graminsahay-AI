@@ -70,7 +70,7 @@ export default function CompetitorMap({
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
             <Users className="w-4 h-4 text-blue-600" />
-            <span>Catchment Population</span>
+            <span>{t.catchment_population}</span>
           </div>
           <span className="text-xl font-extrabold text-slate-800">
             {marketReach?.estimated_population?.toLocaleString('en-IN') || '18,500'}
@@ -81,7 +81,7 @@ export default function CompetitorMap({
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
             <Home className="w-4 h-4 text-indigo-600" />
-            <span>Households in Area</span>
+            <span>{t.households_in_area}</span>
           </div>
           <span className="text-xl font-extrabold text-slate-800">
             {marketReach?.estimated_households?.toLocaleString('en-IN') || '4,200'}
@@ -92,7 +92,7 @@ export default function CompetitorMap({
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
             <Users className="w-4 h-4 text-emerald-600" />
-            <span>Potential Customers</span>
+            <span>{t.potential_customers}</span>
           </div>
           <span className="text-xl font-extrabold text-emerald-600">
             {marketReach?.potential_target_customers?.toLocaleString('en-IN') || '2,800'}
@@ -102,154 +102,115 @@ export default function CompetitorMap({
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mb-1">
-            <Store className="w-4 h-4 text-rose-600" />
-            <span>Competitor Units</span>
+            <Store className="w-4 h-4 text-amber-600" />
+            <span>{t.competitor_density}</span>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-extrabold text-slate-800">{compCount}</span>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${densityColors[density]}`}>
-              {density} DENSITY
-            </span>
-          </div>
-          <span className="text-[11px] text-slate-400 block mt-0.5">Within radius</span>
+          <span className="text-xl font-extrabold text-slate-800">
+            {compCount} Units
+          </span>
+          <span
+            className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border mt-1 ${
+              densityColors[density] || densityColors.MEDIUM
+            }`}
+          >
+            {density} Saturation
+          </span>
         </div>
       </div>
 
-      {/* Map & Competitor List Split View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Interactive Leaflet Map Container */}
-        <div className="lg:col-span-2 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-blue-600" />
-              <h3 className="font-bold text-slate-800 text-sm">
-                Geospatial Catchment Map (Radius: {radiusKm} km)
-              </h3>
-            </div>
-            <ConfidenceBadge
-              level={competitors?.confidence || 'HIGH'}
-              source={competitors?.data_source}
-              showSource={false}
-            />
+      {/* Interactive Map Card */}
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+          <div>
+            <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
+              <Compass className="w-5 h-5 text-blue-600" />
+              {t.step3_title}
+            </h3>
+            <p className="text-xs text-slate-500">
+              {location.village}, {location.district} ({location.state}) • Catchment Radius: {radiusKm} km
+            </p>
           </div>
 
-          <div className="w-full h-80 sm:h-96 rounded-xl overflow-hidden relative border border-slate-200">
-            <MapContainer
+          <ConfidenceBadge level={competitors?.confidence || 'HIGH'} source={competitors?.source || 'OpenStreetMap POIs'} />
+        </div>
+
+        {/* Leaflet Map Box */}
+        <div className="h-96 w-full rounded-xl overflow-hidden border border-slate-200 relative z-0">
+          <MapContainer
+            center={[lat, lon]}
+            zoom={radiusKm > 10 ? 11 : 12}
+            scrollWheelZoom={false}
+            style={{ height: '100%', width: '100%' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            {/* Proposed Business Location */}
+            <Marker position={[lat, lon]} icon={userIcon}>
+              <Popup>
+                <div className="text-xs font-sans">
+                  <b className="text-blue-600">Proposed Site</b>
+                  <p className="mt-1 font-semibold">{businessName}</p>
+                  <p className="text-slate-500">{location.village}, {location.district}</p>
+                </div>
+              </Popup>
+            </Marker>
+
+            {/* Catchment Radius Circle */}
+            <Circle
               center={[lat, lon]}
-              zoom={11}
-              scrollWheelZoom={false}
-              className="h-full w-full"
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
+              radius={radiusKm * 1000}
+              pathOptions={{
+                color: '#2563eb',
+                fillColor: '#3b82f6',
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: '4, 4',
+              }}
+            />
 
-              {/* Catchment Radius Circle */}
-              <Circle
-                center={[lat, lon]}
-                radius={radiusKm * 1000}
-                pathOptions={{ color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.1, weight: 2 }}
-              />
-
-              {/* Proposed Business Location (Blue) */}
-              <Marker position={[lat, lon]} icon={userIcon}>
+            {/* Existing Competitors Pins */}
+            {compList.map((comp, idx) => (
+              <Marker
+                key={idx}
+                position={[comp.latitude, comp.longitude]}
+                icon={competitorIcon}
+              >
                 <Popup>
-                  <div className="text-xs">
-                    <p className="font-bold text-blue-700">📍 Proposed Location</p>
-                    <p className="text-slate-600 font-semibold">{location.village}, {location.district}</p>
-                    <p className="text-slate-500 mt-1">Target: {businessName}</p>
+                  <div className="text-xs font-sans">
+                    <b className="text-rose-600">Competitor Unit</b>
+                    <p className="mt-1 font-semibold">{comp.name}</p>
+                    <p className="text-slate-500">{comp.category}</p>
+                    <p className="text-slate-400 text-[10px] mt-0.5">~{comp.distance_km} km away</p>
                   </div>
                 </Popup>
               </Marker>
-
-              {/* Competitor Markers (Red) */}
-              {compList.map((c, idx) => (
-                <Marker key={idx} position={[c.lat, c.lon]} icon={competitorIcon}>
-                  <Popup>
-                    <div className="text-xs">
-                      <p className="font-bold text-rose-600">🏪 {c.name}</p>
-                      <p className="text-slate-600">{c.business_type}</p>
-                      <p className="text-slate-500 mt-1">Distance: <b>{c.distance_km} km</b></p>
-                      <p className="text-[10px] text-slate-400 italic">Source: {c.source}</p>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-
-            {/* Map Legend Floating Tag */}
-            <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-3 py-2 rounded-lg border border-slate-200 text-[11px] font-semibold text-slate-700 z-[1000] shadow-sm flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-blue-600 border border-white" />
-                <span>Your Proposed Unit</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500 border border-white" />
-                <span>Existing Competitors</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-            <span>{competitors?.explanation}</span>
-            <span className="italic text-[11px]">Source: {competitors?.data_source}</span>
-          </div>
+            ))}
+          </MapContainer>
         </div>
 
-        {/* Nearby Competitors List Sidebar */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-              <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                <Store className="w-4 h-4 text-slate-600" />
-                Identified Units ({compList.length})
-              </h3>
-              <span className="text-[10px] font-bold text-slate-500 uppercase">
-                Sorted by Proximity
-              </span>
-            </div>
-
-            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-              {compList.length === 0 ? (
-                <p className="text-xs text-slate-400 italic p-4 text-center">
-                  No direct competitors found in immediate radius.
-                </p>
-              ) : (
-                compList.map((c, idx) => (
-                  <div
-                    key={idx}
-                    className="p-2.5 rounded-xl border border-slate-100 bg-slate-50 hover:bg-blue-50/50 transition-all text-xs"
-                  >
-                    <div className="flex items-start justify-between">
-                      <span className="font-bold text-slate-800">{c.name}</span>
-                      <span className="font-bold text-blue-600 whitespace-nowrap">
-                        {c.distance_km} km
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5">{c.business_type}</p>
-                    <div className="mt-1 flex items-center gap-1 text-[10px] text-slate-400">
-                      <span>{c.verified ? '✓ Verified OSM POI' : '• District Udyam Proxy'}</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+        {/* Legend */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-3 h-3 rounded-full bg-blue-600 inline-block border border-white" />
+              {t.map_legend_center}
+            </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-3 h-3 rounded-full bg-rose-500 inline-block border border-white" />
+              {t.map_legend_competitors}
+            </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-3 h-3 rounded-full bg-blue-200 border border-blue-500 inline-block" />
+              {radiusKm} km {t.labels.radius}
+            </span>
           </div>
 
-          <div className="pt-4 border-t border-slate-100">
-            <span className="text-xs font-bold text-slate-700 block mb-1">Primary Sales Channels:</span>
-            <div className="flex flex-wrap gap-1.5">
-              {marketReach?.primary_channels?.map((ch, idx) => (
-                <span
-                  key={idx}
-                  className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-medium"
-                >
-                  {ch}
-                </span>
-              ))}
-            </div>
-          </div>
+          <span className="text-[11px] text-slate-400">
+            Source: {competitors?.source || 'OpenStreetMap live Overpass API'}
+          </span>
         </div>
       </div>
 

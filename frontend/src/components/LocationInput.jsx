@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, User, ArrowRight, Sparkles, Navigation, Locate } from 'lucide-react';
 import { translations } from '../i18n/translations';
-import ConfidenceBadge from './ConfidenceBadge';
 
 export default function LocationInput({
   entrepreneur,
@@ -75,7 +74,7 @@ export default function LocationInput({
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
             <Navigation className="w-3.5 h-3.5 text-blue-600" />
-            Select Rural District:
+            {t.select_district}
           </span>
           {commonDistricts.map((item, idx) => (
             <button
@@ -99,7 +98,7 @@ export default function LocationInput({
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shrink-0 transition-all"
         >
           <Locate className={`w-3.5 h-3.5 text-blue-600 ${detectingGps ? 'animate-spin' : ''}`} />
-          <span>{detectingGps ? 'Detecting GPS...' : 'Use Current GPS'}</span>
+          <span>{detectingGps ? t.detecting_gps : t.use_gps}</span>
         </button>
       </div>
 
@@ -110,7 +109,7 @@ export default function LocationInput({
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <User className="w-4 h-4" />
             </div>
-            <h3 className="font-bold text-slate-800 text-base">Applicant Information</h3>
+            <h3 className="font-bold text-slate-800 text-base">{t.applicant_info}</h3>
           </div>
 
           <div>
@@ -166,7 +165,7 @@ export default function LocationInput({
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <MapPin className="w-4 h-4" />
             </div>
-            <h3 className="font-bold text-slate-800 text-base">Village & Catchment Location</h3>
+            <h3 className="font-bold text-slate-800 text-base">{t.village_location}</h3>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -243,9 +242,9 @@ export default function LocationInput({
               className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
             <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-              <span>3 km (Village Core)</span>
-              <span>10 km (Block Catchment)</span>
-              <span>20 km (Sub-District)</span>
+              <span>3 km ({t.core_village})</span>
+              <span>10 km ({t.block_catchment})</span>
+              <span>20 km ({t.sub_district})</span>
             </div>
           </div>
         </div>

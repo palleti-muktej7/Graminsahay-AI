@@ -33,6 +33,25 @@ export default function BusinessSelect({
     }
   };
 
+  const getLocalizedBizName = (biz) => {
+    switch (biz.id) {
+      case 'dairy_farming':
+        return t.biz_dairy || biz.name;
+      case 'poultry_farming':
+        return t.biz_poultry || biz.name;
+      case 'rural_kirana_retail':
+        return t.biz_kirana || biz.name;
+      case 'tailoring_garments':
+        return t.biz_tailoring || biz.name;
+      case 'agro_processing_mill':
+        return t.biz_agro || biz.name;
+      case 'two_wheeler_workshop':
+        return t.biz_workshop || biz.name;
+      default:
+        return biz.name;
+    }
+  };
+
   const capitalPresets = [25000, 50000, 100000, 200000, 500000];
 
   // Calculate live numbers
@@ -61,7 +80,7 @@ export default function BusinessSelect({
               {t.labels.available_capital}
             </h3>
             <p className="text-xs text-slate-500">
-              Government schemes require 10% beneficiary margin equity.
+              {t.equity_requirement}
             </p>
           </div>
           <div className="text-right">
@@ -73,7 +92,7 @@ export default function BusinessSelect({
 
         {/* Quick Capital Preset Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500 mr-1">Quick Select:</span>
+          <span className="text-xs font-semibold text-slate-500 mr-1">{t.quick_select}</span>
           {capitalPresets.map((val) => (
             <button
               key={val}
@@ -107,7 +126,7 @@ export default function BusinessSelect({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
             <span className="text-[11px] font-semibold text-slate-500 uppercase block">
-              1. Your Contribution (10%)
+              {t.your_contribution}
             </span>
             <span className="text-lg font-bold text-slate-800">
               ₹{capital.toLocaleString('en-IN')}
@@ -116,7 +135,7 @@ export default function BusinessSelect({
 
           <div className="bg-blue-50 p-3 rounded-xl border border-blue-200">
             <span className="text-[11px] font-semibold text-blue-700 uppercase block">
-              2. Total Project Outlay (100%)
+              {t.total_project_outlay}
             </span>
             <span className="text-lg font-bold text-blue-800">
               ₹{totalProject.toLocaleString('en-IN')}
@@ -125,7 +144,7 @@ export default function BusinessSelect({
 
           <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
             <span className="text-[11px] font-semibold text-emerald-700 uppercase block">
-              3. Eligible Loan (90%)
+              {t.eligible_loan_title}
             </span>
             <span className="text-lg font-bold text-emerald-800">
               ₹{loanAmount.toLocaleString('en-IN')}
@@ -136,11 +155,11 @@ export default function BusinessSelect({
         {/* Auto Scheme Category Flag */}
         <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 flex items-center justify-between text-xs">
           <div>
-            <span className="font-bold text-amber-900">Auto Scheme Routing: </span>
+            <span className="font-bold text-amber-900">{t.auto_scheme_routing} </span>
             <span className="text-amber-800">
               {isMicroFinance
-                ? 'MoSJE Micro Finance Scheme (≤ ₹1.40 Lakh Outlay • 6.5% p.a. • 3-Yr Tenure • 3-Mo Moratorium)'
-                : 'MoSJE Term Loan Scheme (> ₹1.40 Lakh Outlay • 8.0% p.a. • 7-Yr Tenure • 6-Mo Moratorium)'}
+                ? 'MoSJE Micro Finance (≤ ₹1.40 Lakh Outlay • 6.5% p.a. • 3-Yr Tenure • 3-Mo Moratorium)'
+                : 'MoSJE Term Loan (> ₹1.40 Lakh Outlay • 8.0% p.a. • 7-Yr Tenure • 6-Mo Moratorium)'}
             </span>
           </div>
         </div>
@@ -149,13 +168,14 @@ export default function BusinessSelect({
       {/* Business Category Selection Grid */}
       <div className="space-y-3">
         <h3 className="font-bold text-slate-800 text-base">
-          Select Business Sector to Analyze
+          {t.select_sector}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {businessProfiles.map((biz) => {
             const Icon = getBusinessIcon(biz.id);
             const isSelected = selectedBusiness === biz.id;
+            const localizedName = getLocalizedBizName(biz);
 
             return (
               <div
@@ -183,16 +203,16 @@ export default function BusinessSelect({
                     </span>
                   </div>
 
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">{biz.name}</h4>
+                  <h4 className="font-bold text-slate-900 text-sm mb-1">{localizedName}</h4>
                   <p className="text-xs text-slate-500 line-clamp-2 mb-3">
                     Typical gross margin ~{biz.typical_margin_pct}%. Value-add: {biz.value_add_opportunities?.[0]}
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
-                  <span>Min Capital: ₹{biz.min_suggested_capital?.toLocaleString('en-IN')}</span>
+                  <span>{t.min_capital_label} ₹{biz.min_suggested_capital?.toLocaleString('en-IN')}</span>
                   <span className={`font-bold ${isSelected ? 'text-emerald-700' : 'text-slate-400'}`}>
-                    {isSelected ? '✓ Selected' : 'Select'}
+                    {isSelected ? t.selected_badge : t.select_btn}
                   </span>
                 </div>
               </div>
