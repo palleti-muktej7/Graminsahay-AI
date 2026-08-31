@@ -4,12 +4,14 @@ import {
   RefreshCw, Search, MapPin, IndianRupee, ArrowRight, Sparkles
 } from 'lucide-react';
 import { fetchAllProposalsApi, downloadDPRByIdApi } from '../services/api';
+import { translations } from '../i18n/translations';
 
 export default function CSCDashboard({
   currentUser,
   onStartNewApplication,
   lang,
 }) {
+  const t = translations[lang] || translations.en;
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,7 +21,7 @@ export default function CSCDashboard({
     setLoading(true);
     try {
       const data = await fetchAllProposalsApi();
-      setProposals(data);
+      setProposals(data || []);
     } catch (err) {
       console.error('Failed to load proposals:', err);
     } finally {
@@ -46,7 +48,7 @@ export default function CSCDashboard({
     }
   };
 
-  const filtered = proposals.filter((p) =>
+  const filtered = (proposals || []).filter((p) =>
     p.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.village?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,13 +61,13 @@ export default function CSCDashboard({
         <div>
           <div className="flex items-center gap-2 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
             <Building2 className="w-4 h-4 text-emerald-400" />
-            <span>Common Service Center (CSC VLE Portal)</span>
+            <span>{t.role_csc}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Village Assisted Business Advisory Hub
+            {t.csc_title}
           </h2>
           <p className="text-emerald-100 text-xs sm:text-sm mt-1 max-w-2xl">
-            Assist local villagers with 1-click feasibility reports, MoSJE concessional scheme eligibility, and bankable Detailed Project Reports (DPR).
+            {t.csc_subtitle}
           </p>
         </div>
 
@@ -75,7 +77,7 @@ export default function CSCDashboard({
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/30 transition-all hover:scale-[1.02]"
           >
             <PlusCircle className="w-5 h-5" />
-            <span>+ New Assisted Village Application</span>
+            <span>{t.new_assisted_app}</span>
           </button>
         </div>
       </div>
@@ -84,7 +86,7 @@ export default function CSCDashboard({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">
-            Villagers Assisted
+            {t.villagers_assisted}
           </span>
           <span className="text-2xl font-black text-slate-900 mt-1 block">
             {proposals.length}
@@ -94,7 +96,7 @@ export default function CSCDashboard({
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-emerald-600 block uppercase tracking-wider">
-            Total Loan Value Unlocked
+            {t.total_loan_unlocked}
           </span>
           <span className="text-2xl font-black text-emerald-600 mt-1 block">
             ₹{(proposals.reduce((acc, p) => acc + (p.loan_amount || 0), 0) / 100000).toFixed(1)}L
@@ -117,7 +119,7 @@ export default function CSCDashboard({
             Top Rural Sector
           </span>
           <span className="text-base font-black text-indigo-900 mt-1 block">
-            Dairy & Food Processing
+            {t.biz_dairy}
           </span>
           <span className="text-[10px] text-indigo-500 block">High margin value-add</span>
         </div>
@@ -128,7 +130,7 @@ export default function CSCDashboard({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div>
             <h3 className="font-extrabold text-slate-900 text-base">
-              Assisted Beneficiaries & Proposals
+              {t.villagers_assisted}
             </h3>
             <p className="text-xs text-slate-500">
               Download printable DPRs or review bank submission status for each applicant.
@@ -140,7 +142,7 @@ export default function CSCDashboard({
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search applicant or village..."
+                placeholder={t.search_placeholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50"
@@ -161,11 +163,11 @@ export default function CSCDashboard({
           <table className="w-full text-xs text-left">
             <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
               <tr>
-                <th className="py-3 px-3">Applicant Name</th>
-                <th className="py-3 px-3">Village / District</th>
+                <th className="py-3 px-3">{t.labels.full_name}</th>
+                <th className="py-3 px-3">{t.labels.village} / {t.labels.district}</th>
                 <th className="py-3 px-3">Proposed Business</th>
-                <th className="py-3 px-3">Own Margin (10%)</th>
-                <th className="py-3 px-3">Eligible Loan (90%)</th>
+                <th className="py-3 px-3">{t.labels.own_equity}</th>
+                <th className="py-3 px-3">{t.labels.loan_amount}</th>
                 <th className="py-3 px-3">MoSJE Scheme</th>
                 <th className="py-3 px-3">Verdict</th>
                 <th className="py-3 px-3 text-right">Actions</th>

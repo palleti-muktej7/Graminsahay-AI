@@ -214,35 +214,93 @@ export default function App() {
 
   const handleVoiceQuery = (query) => {
     const qLower = query.toLowerCase();
-    if (qLower.includes('dairy') || qLower.includes('milk')) {
+
+    // 1. Business Matching (Multilingual)
+    if (
+      qLower.includes('dairy') || qLower.includes('milk') ||
+      qLower.includes('दूध') || qLower.includes('डेयरी') ||
+      qLower.includes('பால்') || qLower.includes('பண்ணை') ||
+      qLower.includes('పాల') || qLower.includes('డైరీ') ||
+      qLower.includes('डेअरी')
+    ) {
       setSelectedBusiness('dairy_farming');
-    } else if (qLower.includes('tailor') || qLower.includes('cloth') || qLower.includes('garment')) {
+    } else if (
+      qLower.includes('tailor') || qLower.includes('cloth') || qLower.includes('garment') ||
+      qLower.includes('सिलाई') || qLower.includes('कपड़े') || qLower.includes('बुटीक') ||
+      qLower.includes('தையல்') || qLower.includes('துணி') ||
+      qLower.includes('టైలరింగ్') || qLower.includes('కుట్టు') ||
+      qLower.includes('टेलरिंग')
+    ) {
       setSelectedBusiness('tailoring_garments');
-    } else if (qLower.includes('kirana') || qLower.includes('shop') || qLower.includes('retail')) {
+    } else if (
+      qLower.includes('kirana') || qLower.includes('shop') || qLower.includes('retail') || qLower.includes('store') ||
+      qLower.includes('किराना') || qLower.includes('दुकान') ||
+      qLower.includes('மளிகை') || qLower.includes('கடை') ||
+      qLower.includes('కిరాణా') || qLower.includes('షాప్') ||
+      qLower.includes('किराणा')
+    ) {
       setSelectedBusiness('rural_kirana_retail');
-    } else if (qLower.includes('poultry') || qLower.includes('chicken') || qLower.includes('egg')) {
+    } else if (
+      qLower.includes('poultry') || qLower.includes('chicken') || qLower.includes('egg') ||
+      qLower.includes('मुर्गी') || qLower.includes('पोल्ट्री') ||
+      qLower.includes('கோழி') || qLower.includes('முட்டை') ||
+      qLower.includes('కోళ్ల') || qLower.includes('పౌల్ట్రీ') ||
+      qLower.includes('कुक्कुटपालन')
+    ) {
       setSelectedBusiness('poultry_farming');
-    } else if (qLower.includes('mill') || qLower.includes('flour') || qLower.includes('spice')) {
+    } else if (
+      qLower.includes('mill') || qLower.includes('flour') || qLower.includes('spice') ||
+      qLower.includes('चक्की') || qLower.includes('मसाला') ||
+      qLower.includes('ஆலை') || qLower.includes('மாவு') ||
+      qLower.includes('మిల్లు') || qLower.includes('మసాలా') ||
+      qLower.includes('गिरणी')
+    ) {
       setSelectedBusiness('agro_processing_mill');
+    } else if (
+      qLower.includes('repair') || qLower.includes('workshop') || qLower.includes('wheeler') ||
+      qLower.includes('मरम्मत') || qLower.includes('वर्कशॉप') ||
+      qLower.includes('பழுது') || qLower.includes('వర్క్‌షాప్')
+    ) {
+      setSelectedBusiness('two_wheeler_workshop');
     }
 
-    if (qLower.includes('100000') || qLower.includes('1 lakh') || qLower.includes('1,00,000')) {
+    // 2. Capital & Margin Extraction (Numbers and Vernacular Words)
+    const lakhMatch = qLower.match(/(\d+)\s*(lakh|lac|लाख|லட்சம்|లక్ష)/);
+    const thousandMatch = qLower.match(/(\d+)\s*(thousand|k|हजार|ஆயிரம்|వేల|हजार)/);
+    const rawNumberMatch = qLower.match(/(?:₹|rs|inr)?\s*(\d{4,7})/);
+
+    if (lakhMatch) {
+      setCapital(parseInt(lakhMatch[1], 10) * 100000);
+    } else if (thousandMatch) {
+      setCapital(parseInt(thousandMatch[1], 10) * 1000);
+    } else if (rawNumberMatch) {
+      setCapital(parseInt(rawNumberMatch[1], 10));
+    } else if (qLower.includes('1 lakh') || qLower.includes('1,00,000') || qLower.includes('एक लाख') || qLower.includes('ஒரு லட்சம்') || qLower.includes('ఒక లక్ష')) {
       setCapital(100000);
-    } else if (qLower.includes('50000') || qLower.includes('50 thousand') || qLower.includes('50,000')) {
+    } else if (qLower.includes('50000') || qLower.includes('50 thousand') || qLower.includes('50,000') || qLower.includes('पचास हजार') || qLower.includes('ஐம்பதாயிரம்') || qLower.includes('యాభై వేలు')) {
       setCapital(50000);
-    } else if (qLower.includes('25000') || qLower.includes('25 thousand')) {
+    } else if (qLower.includes('30000') || qLower.includes('30,000') || qLower.includes('तीस हजार') || qLower.includes('முப்பதாயிரம்') || qLower.includes('ముప్పై వేలు')) {
+      setCapital(30000);
+    } else if (qLower.includes('25000') || qLower.includes('25,000') || qLower.includes('पच्चीस हजार') || qLower.includes('இருபத்தைந்தாயிரம்')) {
       setCapital(25000);
-    } else if (qLower.includes('200000') || qLower.includes('2 lakh')) {
+    } else if (qLower.includes('2 lakh') || qLower.includes('2,00,000') || qLower.includes('दो लाख') || qLower.includes('இரண்டு லட்சம்')) {
       setCapital(200000);
     }
 
-    if (qLower.includes('thanjavur')) {
-      setLocation((prev) => ({ ...prev, district: 'Thanjavur', village: 'Melattur', state: 'Tamil Nadu', lat: 10.787, lon: 79.1378 }));
-    } else if (qLower.includes('barabanki')) {
-      setLocation((prev) => ({ ...prev, district: 'Barabanki', village: 'Zaidpur', state: 'Uttar Pradesh', lat: 26.9274, lon: 81.1834 }));
-    } else if (qLower.includes('pune')) {
-      setLocation((prev) => ({ ...prev, district: 'Pune', village: 'Manchar', state: 'Maharashtra', lat: 18.5204, lon: 73.8567 }));
+    // 3. Location Matching (Districts & States)
+    if (qLower.includes('thanjavur') || qLower.includes('तंजौर') || qLower.includes('தஞ்சாவூர்')) {
+      setLocation((prev) => ({ ...prev, district: 'Thanjavur', village: 'Melattur', block: 'Papanasam', state: 'Tamil Nadu', latitude: 10.787, longitude: 79.1378, pincode: '614205' }));
+    } else if (qLower.includes('barabanki') || qLower.includes('बाराबंकी')) {
+      setLocation((prev) => ({ ...prev, district: 'Barabanki', village: 'Zaidpur', block: 'Siddhaur', state: 'Uttar Pradesh', latitude: 26.9274, longitude: 81.1834, pincode: '225414' }));
+    } else if (qLower.includes('pune') || qLower.includes('पुणे')) {
+      setLocation((prev) => ({ ...prev, district: 'Pune', village: 'Manchar', block: 'Ambegaon', state: 'Maharashtra', latitude: 18.5204, longitude: 73.8567, pincode: '410503' }));
+    } else if (qLower.includes('guntur') || qLower.includes('गुंटूर') || qLower.includes('குண்டூர்') || qLower.includes('గుంటూరు')) {
+      setLocation((prev) => ({ ...prev, district: 'Guntur', village: 'Tenali Rural', block: 'Tenali', state: 'Andhra Pradesh', latitude: 16.3067, longitude: 80.4365, pincode: '522201' }));
     }
+
+    // Auto-advance to Step 2 to show chosen business and capital
+    setCurrentStep(2);
+    return true;
   };
 
   const currentBiz = businessProfiles.find((b) => b.id === selectedBusiness) || businessProfiles[0];

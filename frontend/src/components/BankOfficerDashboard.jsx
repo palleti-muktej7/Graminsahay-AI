@@ -4,8 +4,10 @@ import {
   Filter, Search, RefreshCw, Eye, ShieldCheck, User, Calendar, MapPin, IndianRupee, ArrowRight
 } from 'lucide-react';
 import { fetchAllProposalsApi, downloadDPRByIdApi, updateProposalStatusApi } from '../services/api';
+import { translations } from '../i18n/translations';
 
 export default function BankOfficerDashboard({ currentUser, lang }) {
+  const t = translations[lang] || translations.en;
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +23,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
     try {
       const data = await fetchAllProposalsApi();
       setProposals(data);
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         if (!selectedProposal) {
           setSelectedProposal(data[0]);
         } else {
@@ -90,13 +92,13 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
   const getStatusBadge = (status) => {
     const s = (status || 'PENDING').toUpperCase();
     if (s === 'SANCTIONED') {
-      return { label: '✓ SANCTIONED', bg: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
+      return { label: t.sanction_btn || '✓ SANCTIONED', bg: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
     }
     if (s === 'CLARIFICATION' || s === 'QUERY') {
-      return { label: '⚠️ QUERY RAISED', bg: 'bg-amber-100 text-amber-800 border-amber-300' };
+      return { label: t.query_btn || '⚠️ QUERY RAISED', bg: 'bg-amber-100 text-amber-800 border-amber-300' };
     }
     if (s === 'DECLINED') {
-      return { label: '✕ DECLINED', bg: 'bg-rose-100 text-rose-800 border-rose-300' };
+      return { label: t.decline_btn || '✕ DECLINED', bg: 'bg-rose-100 text-rose-800 border-rose-300' };
     }
     return { label: '⏳ PENDING APPRAISAL', bg: 'bg-slate-100 text-slate-700 border-slate-300' };
   };
@@ -108,13 +110,13 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
         <div>
           <div className="flex items-center gap-2 text-blue-300 text-xs font-bold uppercase tracking-wider mb-2">
             <Landmark className="w-4 h-4 text-blue-400" />
-            <span>Bank Credit Officer & MoSJE Appraisal Desk</span>
+            <span>{t.role_bank}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Rural Loan Appraisal & Sanction Portal
+            {t.bank_title}
           </h2>
           <p className="text-blue-200 text-xs sm:text-sm mt-1 max-w-2xl">
-            Review live rural enterprise proposals from Supabase PostgreSQL. Audit DSCR repayment feasibility, moratorium grace compliance, and issue bank sanctions.
+            {t.bank_subtitle}
           </p>
         </div>
 
@@ -124,7 +126,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/20"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refresh Live Database</span>
+            <span>{t.refresh_db}</span>
           </button>
         </div>
       </div>
@@ -143,7 +145,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">
-            Total Applications in DB
+            {t.total_apps}
           </span>
           <span className="text-2xl font-black text-slate-900 mt-1 block">
             {proposals.length}
@@ -153,7 +155,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-emerald-600 block uppercase tracking-wider">
-            🟢 Sanctioned Loans
+            {t.sanctioned_loans}
           </span>
           <span className="text-2xl font-black text-emerald-600 mt-1 block">
             {proposals.filter((p) => p.status === 'SANCTIONED').length}
@@ -163,7 +165,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-blue-600 block uppercase tracking-wider">
-            Total Concessional Outlay
+            {t.total_outlay}
           </span>
           <span className="text-2xl font-black text-blue-600 mt-1 block">
             ₹{(proposals.reduce((acc, p) => acc + (p.loan_amount || 0), 0) / 100000).toFixed(1)}L
@@ -173,7 +175,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-[11px] font-semibold text-indigo-600 block uppercase tracking-wider">
-            Credit Officer
+            {t.credit_officer}
           </span>
           <span className="text-sm font-bold text-slate-800 mt-1 block truncate">
             {currentUser?.full_name || 'Credit Appraisal Officer'}
@@ -193,7 +195,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search by applicant, business, or district..."
+                placeholder={t.search_placeholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
@@ -273,7 +275,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                           {prop.viability_verdict} ({prop.viability_score}/100)
                         </span>
                         <span className="text-xs font-black text-blue-700 block mt-1">
-                          ₹{prop.loan_amount?.toLocaleString('en-IN')} Loan
+                          ₹{prop.loan_amount?.toLocaleString('en-IN')} {t.labels.loan_amount}
                         </span>
                       </div>
                     </div>
@@ -286,18 +288,18 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">DSCR Ratio:</span>
+                        <span className="text-slate-400 block text-[10px]">{t.labels.dscr}:</span>
                         <span className="font-bold text-emerald-700">{prop.dscr}x</span>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">EMI / Moratorium:</span>
+                        <span className="text-slate-400 block text-[10px]">{t.labels.regular_emi}:</span>
                         <span className="font-bold text-slate-800">₹{prop.regular_monthly_emi?.toLocaleString('en-IN')} ({prop.moratorium_months}m grace)</span>
                       </div>
                     </div>
 
                     {/* Permanent Database Status Strip */}
                     <div className="mt-2.5 pt-2 border-t border-slate-200/60 text-xs flex items-center justify-between">
-                      <span className="text-slate-500 text-[10px]">Database Decision:</span>
+                      <span className="text-slate-500 text-[10px]">{t.database_decision}</span>
                       <span
                         className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${statusBadge.bg}`}
                       >
@@ -355,15 +357,15 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                       <span className="font-semibold text-slate-700">{selectedProposal.village}, {selectedProposal.district}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Total Project Outlay:</span>
+                      <span className="text-slate-500">{t.labels.total_project_cost}:</span>
                       <span className="font-bold text-slate-900">₹{selectedProposal.total_project_cost?.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Beneficiary Equity (10%):</span>
+                      <span className="text-slate-500">{t.labels.own_equity}:</span>
                       <span className="font-bold text-emerald-600">₹{selectedProposal.available_margin_capital?.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">MoSJE Loan Amount (90%):</span>
+                      <span className="text-slate-500">{t.labels.loan_amount}:</span>
                       <span className="font-extrabold text-blue-700">₹{selectedProposal.loan_amount?.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
@@ -375,19 +377,19 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                       <span className="font-bold text-blue-900">{selectedProposal.selected_scheme_name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-800">Interest Rate / Tenure:</span>
+                      <span className="text-blue-800">{t.labels.interest_rate} / {t.labels.tenure}:</span>
                       <span className="font-bold text-slate-800">{selectedProposal.interest_rate_pct}% p.a. • {selectedProposal.tenure_years} Yrs</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-800">Moratorium Grace:</span>
+                      <span className="text-blue-800">{t.labels.moratorium}:</span>
                       <span className="font-bold text-amber-700">{selectedProposal.moratorium_months} Months Principal Grace</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-800">Regular Monthly EMI:</span>
+                      <span className="text-blue-800">{t.labels.regular_emi}:</span>
                       <span className="font-extrabold text-slate-900">₹{selectedProposal.regular_monthly_emi?.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between items-center pt-1 border-t border-blue-200">
-                      <span className="text-blue-900 font-bold">DSCR Repayment Ratio:</span>
+                      <span className="text-blue-900 font-bold">{t.labels.dscr}:</span>
                       <span className="font-black text-emerald-700 text-sm">{selectedProposal.dscr}x (Viable)</span>
                     </div>
                   </div>
@@ -400,14 +402,14 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                   className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <FileText className="w-4 h-4 text-blue-400" />
-                  <span>{downloadingDpr ? 'Generating PDF from Database...' : 'Download Bank Appraisal DPR (PDF)'}</span>
+                  <span>{downloadingDpr ? 'Generating PDF from Database...' : t.download_appraisal_dpr}</span>
                 </button>
               </div>
 
               {/* Action Buttons for Bank Officer */}
               <div className="pt-3 border-t border-slate-100 space-y-2">
                 <span className="text-[11px] font-bold text-slate-600 block">
-                  Update Sanction Decision in Database:
+                  {t.database_decision}
                 </span>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -419,7 +421,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                         : 'bg-emerald-600 hover:bg-emerald-700'
                     }`}
                   >
-                    ✓ Sanction
+                    {t.sanction_btn}
                   </button>
                   <button
                     disabled={actionLoading}
@@ -430,7 +432,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                         : 'bg-amber-500 hover:bg-amber-600'
                     }`}
                   >
-                    ⚠️ Query
+                    {t.query_btn}
                   </button>
                   <button
                     disabled={actionLoading}
@@ -441,7 +443,7 @@ export default function BankOfficerDashboard({ currentUser, lang }) {
                         : 'bg-rose-600 hover:bg-rose-700'
                     }`}
                   >
-                    ✕ Decline
+                    {t.decline_btn}
                   </button>
                 </div>
               </div>
