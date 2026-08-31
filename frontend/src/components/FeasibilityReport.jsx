@@ -14,33 +14,171 @@ export default function FeasibilityReport({
 }) {
   const t = translations[lang] || translations.en;
 
-  const strengths = swot?.strengths || [
-    { factor: 'Low initial capital entry barrier', evidence: 'MoSJE concessional debt covers 90% project cost' },
-    { factor: 'High local household demand', evidence: 'Rural consumption index indicates steady daily demand' }
-  ];
+  // Localized Fallback Content for all 5 languages
+  const localizedSWOTData = {
+    en: {
+      strengths: [
+        'Available 10% self-equity qualifies for 90% MoSJE concessional debt leverage.',
+        'Direct hyper-local proximity to village consumers minimizes transport overheads.',
+        'Low fixed overheads allow competitive pricing against urban brands.'
+      ],
+      weaknesses: [
+        'Initial margin capital limits automated bulk processing in launch months.',
+        'Limited cold storage buffer requiring rapid daily turnover.',
+        'Working capital sensitive to delayed retail collections.'
+      ],
+      opportunities: [
+        'Value-addition processing (curd/paneer/ghee/garments) yields 35% higher realization.',
+        'Institutional supply tie-ups with local dhabas, tea stalls, and weekly haats.',
+        'Government priority sector interest subvention under MoSJE schemes.'
+      ],
+      threats: [
+        'Input raw material price fluctuations during peak seasonal cycles.',
+        'Middleman commission agents attempting monopsony price suppression.',
+        'Monsoon transport disruptions in remote rural access roads.'
+      ]
+    },
+    hi: {
+      strengths: [
+        'उपलब्ध 10% स्वयं की पूंजी से 90% MoSJE रियायती ऋण प्राप्त करने की पूर्ण पात्रता।',
+        'गाँव के उपभोक्ताओं के सीधे संपर्क से परिवहन एवं वितरण लागत न्यूनतम।',
+        'कम परिचालन लागत से बड़े शहरी ब्रांडों की तुलना में बेहतर प्रतिस्पर्धी बढ़त।'
+      ],
+      weaknesses: [
+        'शुरुआती महीनों में ऑटोमेटेड मशीनों एवं बड़े भंडारण की सीमित व्यवस्था।',
+        'दैनिक खराब होने वाले माल के त्वरित विक्रय पर अधिक निर्भरता।',
+        'स्थानीय उधारी की समय पर वसूली न होने पर कार्यशील पूंजी का दबाव।'
+      ],
+      opportunities: [
+        'कच्चे माल का मूल्य-संवर्धन (दही, पनीर, घी, रेडीमेड उत्पाद) करके 35% अतिरिक्त लाभ।',
+        'स्थानीय चाय की दुकानों, ढाबों और साप्ताहिक हाट बाज़ारों से सीधा अनुबंध।',
+        'MoSJE / NBCFDC / NSFDC के तहत रियायती 6.5%-8% ब्याज दर का लाभ।'
+      ],
+      threats: [
+        'मौसम के अनुसार चारे, बीज एवं कच्चे माल की कीमतों में उतार-चढ़ाव।',
+        'स्थानीय बिचौलियों और आढ़तियों द्वारा कम कीमत पर खरीद का दबाव।',
+        'मानसून के दौरान ग्रामीण संपर्क मार्गों पर आवागमन में रुकावट।'
+      ]
+    },
+    ta: {
+      strengths: [
+        '10% சொந்த முதலீட்டின் மூலம் 90% அரசு MoSJE சலுகைக் கடன் பெற முழு தகுதி.',
+        'கிராம நுகர்வோருடன் நேரடி தொடர்பு இருப்பதால் போக்குவரத்து செலவுகள் குறைவு.',
+        'குறைந்த உற்பத்தி செலவு மூலம் சந்தையில் சிறந்த போட்டி திறன்.'
+      ],
+      weaknesses: [
+        'தொடக்க மாதங்களில் பெரிய குளிர்பதன சேமிப்பு வசதிகள் குறைவு.',
+        'தினசரி உற்பத்திப் பொருட்களை உடனுக்குடன் விற்க வேண்டிய நிலை.',
+        'கடன் பாக்கி வசூலில் தாமதம் ஏற்பட்டால் நடைமுறை மூலதன சுமை.'
+      ],
+      opportunities: [
+        'மதிப்புக் கூட்டப்பட்ட தயாரிப்புகள் (தயிர், பன்னீர், நெய்) மூலம் 35% கூடுதல் லாபம்.',
+        'உள்ளூர் உணவகங்கள், தேநீர் கடைகள் மற்றும் வாரச் சந்தைகளுடன் நேரடி ஒப்பந்தம்.',
+        'அரசு திட்டங்கள் மூலம் குறைந்த வட்டியில் (6.5% - 8%) கடனுதவி பெறும் வாய்ப்பு.'
+      ],
+      threats: [
+        'பருவகால மாறுபாடுகளால் தீவனம் மற்றும் மூலப்பொருள் விலை உயர்வு.',
+        'இடைத்தரகர்களால் குறைந்த விலைக்கு வாங்கப்படும் அபாயம்.',
+        'மழைக் காலங்களில் கிராமப்புற போக்குவரத்து தாமதங்கள்.'
+      ]
+    },
+    te: {
+      strengths: [
+        '10% స్వంత పెట్టుబడితో 90% MoSJE ప్రభుత్వ సబ్సిడీ రుణాన్ని పొందే పూర్తి అర్హత.',
+        'గ్రామ వినియోగదారులకు దగ్గరగా ఉండటం వల్ల రవాణా మరియు విక్రయ ఖర్చులు ఆదా.',
+        'తక్కువ నిర్వహణ ఖర్చులతో నగర ఉత్పత్తుల కంటే పోటీ ధరలను అందించవచ్చు.'
+      ],
+      weaknesses: [
+        'ప్రారంభ నెలల్లో భారీ యంత్రాలు మరియు నిల్వ గిడ్డంగుల కొరత.',
+        'తాజా ఉత్పత్తులను ప్రతిరోజూ మార్కెట్లో వెంటనే విక్రయించాల్సిన అవసరం.',
+        'గ్రామాల్లో అప్పుగా ఇచ్చిన డబ్బు సమయానికి రాకపోతే వర్కింగ్ క్యాపిటల్ ఇబ్బంది.'
+      ],
+      opportunities: [
+        'విలువ ఆధారిత ఉత్పత్తులు (పెరుగు, పనీర్, నెయ్యి, దుస్తులు) ద్వారా 35% అధిక నికర లాభం.',
+        'స్థానిక హోటళ్ళు, టీ దుకాణాలు మరియు వారాంతపు సంతలతో నేరుగా సరఫరా ఒప్పందాలు.',
+        'MoSJE / NBCFDC ద్వారా 6.5% - 8% తక్కువ వడ్డీతో ప్రభుత్వ రుణ సౌకర్యం.'
+      ],
+      threats: [
+        'వేసవి మరియు వర్షాకాలంలో ముడిసరుకు, పశుగ్రాసం ధరల హెచ్చుతగ్గులు.',
+        'మధ్యవర్తులు (దళారులు) ధరలను తగ్గించి కొనుగోలు చేసే అవకాశం.',
+        'వర్షాకాలంలో గ్రామీణ రవాణా రహదారుల ఇబ్బందులు.'
+      ]
+    },
+    mr: {
+      strengths: [
+        '10% स्वतःच्या भांडवलावर 90% MoSJE शासकीय सवलतीचे कर्ज मिळवण्याची पूर्ण पात्रता.',
+        'गावातील ग्राहकांशी थेट संपर्क असल्याने वाहतूक व वितरण खर्च नगण्य.',
+        'कमी उत्पादन खर्चामुळे बाजारात उत्तम नफा आणि स्पर्धात्मक फायदा.'
+      ],
+      weaknesses: [
+        'सुरुवातीच्या काळात मोठी शीतकरण यंत्रणा आणि साठवणुकीची मर्यादित सुविधा.',
+        'उत्पादित माल दररोज तात्काळ विकण्याची आवश्यकता.',
+        'उधारी वसुली वेळेवर न झाल्यास खेळत्या भांडवलावर येणारा ताण.'
+      ],
+      opportunities: [
+        'मूल्यवर्धन प्रक्रिया (दही, पनीर, तूप, रेडिमेड कपडे) करून 35% अधिक नफा.',
+        'स्थानिक ढाबे, चहाची दुकाने आणि आठवडे बाजारांशी थेट पुरवठा करार.',
+        'शासकीय योजनांतर्गत केवळ 6.5% - 8% अल्प व्याजदराचा लाभ.'
+      ],
+      threats: [
+        'ऋतूनुसार चारा, बियाणे आणि कच्च्या मालाच्या किमतीतील चढ-उतार.',
+        'स्थानिक मध्यस्थ आणि दलालांकडून कमी भावात खरेदीचा दबाव.',
+        'पावसाळ्यात ग्रामीण वाहतूक व्यवस्थेतील अडथळे.'
+      ]
+    }
+  };
 
-  const weaknesses = swot?.weaknesses || [
-    { factor: 'Perishable inventory risk', evidence: 'Requires cold chain or daily liquid sales management' }
-  ];
+  const currentLangSWOT = localizedSWOTData[lang] || localizedSWOTData.en;
 
-  const opportunities = swot?.opportunities || [
-    { factor: 'Value addition processing', evidence: 'Converting raw produce increases margin by 35%' }
-  ];
+  // Extract helper for strings or objects
+  const normalizeItems = (apiItems, fallbackItems) => {
+    if (apiItems && Array.isArray(apiItems) && apiItems.length > 0) {
+      // Check if items have non-empty text
+      const valid = apiItems.map((it) => {
+        if (typeof it === 'string' && it.trim()) return it;
+        if (it && typeof it === 'object') {
+          return it.factor || it.text || it.title || it.evidence || JSON.stringify(it);
+        }
+        return '';
+      }).filter(Boolean);
 
-  const threats = swot?.threats || [
-    { factor: 'Monopsony middleman pricing', evidence: 'Local mandi commission agents compress farmer realizations' }
-  ];
+      if (valid.length > 0) return valid;
+    }
+    return fallbackItems;
+  };
 
+  const strengths = normalizeItems(swot?.strengths, currentLangSWOT.strengths);
+  const weaknesses = normalizeItems(swot?.weaknesses, currentLangSWOT.weaknesses);
+  const opportunities = normalizeItems(swot?.opportunities, currentLangSWOT.opportunities);
+  const threats = normalizeItems(swot?.threats, currentLangSWOT.threats);
+
+  // Localized Threats and Mitigations
   const threatsList = localThreats?.identified_threats || [
     {
-      threat: 'Raw material & input price volatility',
+      threat: lang === 'te' ? 'ముడిసరుకు మరియు గ్రాసం ధరల హెచ్చుతగ్గులు' :
+              lang === 'hi' ? 'कच्चे माल एवं चारे की कीमतों में उतार-चढ़ाव' :
+              lang === 'ta' ? 'மூலப்பொருள் மற்றும் தீவன விலை ஏற்ற இறக்கங்கள்' :
+              lang === 'mr' ? 'कच्चा माल आणि चाऱ्याच्या भावातील चढ-उतार' :
+              'Raw material & input price volatility',
       severity: 'MEDIUM',
-      mitigation_strategy: 'Form collective purchasing with nearby farmers to negotiate bulk discounts.'
+      mitigation_strategy: lang === 'te' ? 'పంట కోత సమయంలో సైలేజ్ నిల్వ సంచులను ఏర్పాటు చేసుకోండి; స్థానిక రైతులతో ముందుగానే ఒప్పందం చేసుకోండి.' :
+                           lang === 'hi' ? 'कटाई के समय साइलेज बैग में चारा स्टोर करें; स्थानीय किसानों से थोक आपूर्ति का अनुबंध करें।' :
+                           lang === 'ta' ? 'அறுவடை காலத்தில் தீவனத்தை சேமித்து வைக்கவும்; உள்ளூர் விவசாயிகளுடன் முன்கூட்டியே ஒப்பந்தம் செய்யவும்.' :
+                           lang === 'mr' ? 'कापणीच्या हंगामात सायलेज बॅगमध्ये चारा साठवून ठेवा; स्थानिक शेतकऱ्यांशी घाऊक पुरवठ्याचा करार करा.' :
+                           'Form collective purchasing with nearby farmers to negotiate bulk discounts.'
     },
     {
-      threat: 'Monopsony buyer price suppression',
+      threat: lang === 'te' ? 'మధ్యవర్తులపై ఆధారపడటం వల్ల తక్కువ ధర రావడం' :
+              lang === 'hi' ? 'बिचौलियों पर निर्भरता से कम मूल्य प्राप्ति' :
+              lang === 'ta' ? 'இடைத்தரகர்கள் மூலம் விலை குறைப்பு அபாயம்' :
+              lang === 'mr' ? 'मध्यस्थांवर अवलंबून असल्याने कमी भाव मिळणे' :
+              'Monopsony middleman price suppression',
       severity: 'HIGH',
-      mitigation_strategy: 'Sell directly to local weekly haats and retail subscribers rather than middlemen.'
+      mitigation_strategy: lang === 'te' ? 'దళారులకు బదులుగా స్థానిక ఇళ్లకు, హోటళ్లకు మరియు వారపు సంతల్లో నేరుగా విక్రయించండి.' :
+                           lang === 'hi' ? 'बिचौलियों के बजाय सीधे स्थानीय 25-30 परिवारों, चाय दुकानों एवं साप्ताहिक हाट में बिक्री करें।' :
+                           lang === 'ta' ? 'இடைத்தரகர்களைத் தவிர்த்து உள்ளூர் வீடுகள், தேநீர் கடைகள் மற்றும் வாரச் சந்தைகளில் நேரடியாக விற்கவும்.' :
+                           lang === 'mr' ? 'दलालांऐवजी स्थानिक कुटुंबे, चहाची दुकाने आणि आठवडे बाजारात थेट विक्री करा.' :
+                           'Sell directly to local weekly haats and retail subscribers rather than middlemen.'
     }
   ];
 
@@ -79,10 +217,10 @@ export default function FeasibilityReport({
               {t.strengths_title}
             </h4>
             <div className="space-y-2">
-              {strengths.map((item, idx) => (
-                <div key={idx} className="text-xs text-slate-700">
-                  <p className="font-semibold text-emerald-950">• {item.factor}</p>
-                  <p className="text-[11px] text-slate-500 pl-2">↳ Evidence: {item.evidence}</p>
+              {strengths.map((text, idx) => (
+                <div key={idx} className="text-xs text-slate-800 font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
+                  <span>{text}</span>
                 </div>
               ))}
             </div>
@@ -95,10 +233,10 @@ export default function FeasibilityReport({
               {t.weaknesses_title}
             </h4>
             <div className="space-y-2">
-              {weaknesses.map((item, idx) => (
-                <div key={idx} className="text-xs text-slate-700">
-                  <p className="font-semibold text-amber-950">• {item.factor}</p>
-                  <p className="text-[11px] text-slate-500 pl-2">↳ Evidence: {item.evidence}</p>
+              {weaknesses.map((text, idx) => (
+                <div key={idx} className="text-xs text-slate-800 font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-amber-600 font-bold mt-0.5">•</span>
+                  <span>{text}</span>
                 </div>
               ))}
             </div>
@@ -111,10 +249,10 @@ export default function FeasibilityReport({
               {t.opportunities_title}
             </h4>
             <div className="space-y-2">
-              {opportunities.map((item, idx) => (
-                <div key={idx} className="text-xs text-slate-700">
-                  <p className="font-semibold text-blue-950">• {item.factor}</p>
-                  <p className="text-[11px] text-slate-500 pl-2">↳ Evidence: {item.evidence}</p>
+              {opportunities.map((text, idx) => (
+                <div key={idx} className="text-xs text-slate-800 font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-blue-600 font-bold mt-0.5">•</span>
+                  <span>{text}</span>
                 </div>
               ))}
             </div>
@@ -127,10 +265,10 @@ export default function FeasibilityReport({
               {t.threats_title}
             </h4>
             <div className="space-y-2">
-              {threats.map((item, idx) => (
-                <div key={idx} className="text-xs text-slate-700">
-                  <p className="font-semibold text-rose-950">• {item.factor}</p>
-                  <p className="text-[11px] text-slate-500 pl-2">↳ Evidence: {item.evidence}</p>
+              {threats.map((text, idx) => (
+                <div key={idx} className="text-xs text-slate-800 font-medium leading-relaxed flex items-start gap-1.5">
+                  <span className="text-rose-600 font-bold mt-0.5">•</span>
+                  <span>{text}</span>
                 </div>
               ))}
             </div>
@@ -164,7 +302,7 @@ export default function FeasibilityReport({
                   {tItem.severity} RISK
                 </span>
               </div>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-600 leading-relaxed">
                 <span className="font-semibold text-emerald-700">Recommended Action:</span> {tItem.mitigation_strategy}
               </p>
             </div>
@@ -213,9 +351,13 @@ export default function FeasibilityReport({
           </div>
         </div>
 
-        <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-900">
+        <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-900 leading-relaxed">
           <span className="font-bold">Value-Add Recommendation: </span>
-          {pricing?.value_addition_advice || 'Converting 30% of daily milk into Paneer/Ghee yields 40% higher realization per liter.'}
+          {pricing?.value_addition_advice || (lang === 'te' ? 'పాల నుండి 30% పనీర్ / నెయ్యిగా మార్చడం ద్వారా లీటరుకు 40% ఎక్కువ ఆదాయం పొందవచ్చు.' :
+                                              lang === 'hi' ? 'दैनिक दूध का 30% पनीर/घी में बदलने से प्रति लीटर 40% अधिक लाभ मिलता है।' :
+                                              lang === 'ta' ? '30% பாலை பன்னீர்/நெய்யாக மாற்றுவதன் மூலம் லிட்டருக்கு 40% கூடுதல் வருமானம் பெறலாம்.' :
+                                              lang === 'mr' ? '30% दुधाचे पनीर/तुपात रूपांतर केल्यास प्रति लिटर 40% अधिक नफा मिळतो.' :
+                                              'Converting 30% of daily produce into value-added products yields 40% higher realization per unit.')}
         </div>
       </div>
 
